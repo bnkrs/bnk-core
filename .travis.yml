@@ -1,0 +1,26 @@
+sudo: false
+language: node_js
+node_js:
+  - "5"
+
+install:
+  - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.2.4.tgz -O /tmp/mongodb.tgz
+  - tar -xvf /tmp/mongodb.tgz
+  - mkdir /tmp/data
+  - ${PWD}/mongodb-linux-x86_64-3.2.4/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
+  - until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
+
+  - npm install -g jasmine-node forever > ./npmlog 2>> ./npmlog && echo "=> npm-deps installed successfully\!" || (echo "There was an error while installing the npm-dependencies:$(cat ./npmlog)"; exit 1)
+  - npm install --dev
+
+before_script:
+  - echo Configuring...; cp ./test/config.travis.js ./config.js
+  - forever start ./bin/www
+  - until nc -z localhost 3000; do echo Waiting for bnk-core; sleep 1; done; sleep 2
+
+script:
+  - jasmine-node --verbose test/api_spec.js
+  - jasmine-node --verbose test/api_user_auth_spec.js
+
+after_script:
+  - forever logs 0

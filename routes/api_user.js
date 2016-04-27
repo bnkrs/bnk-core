@@ -64,6 +64,16 @@ var auth = require('../lib/auth');
  *       "phrase": ["animal", "dad", "wildness", "...", "monster"]
  *     }
  *
+ * @apiError FieldsMissing An account with this username already exists
+ * @apiErrorExample FieldsMissing
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 400,
+ *         "message": "FieldsMissing"
+ *       }
+ *     }
+ *
  * @apiError UserExists An account with this username already exists
  * @apiErrorExample UserExists
  *     HTTP/1.1 400 Bad Request

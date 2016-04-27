@@ -40,5 +40,12 @@
   "apidoc": {
     "title": "bnk-core - API-Documentation",
     "url": "https://your.bnk.instance"
+  },
+  "devDependencies": {
+    "frisby": "^0.8.5",
+    "jasmine-node": "^1.14.5",
+    "mocha": "^2.4.5",
+    "should": "^8.3.1",
+    "supertest": "^1.2.0"
   }
 }

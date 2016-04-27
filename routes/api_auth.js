@@ -20,10 +20,10 @@ var auth = require('../lib/auth');
  * 
  * @apiError UsernamePasswordMissing Either username or password wasn't provided
  * @apiErrorExample UsernamePasswordMissing
- *     HTTP/1.1 401 Not Authorized
+ *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "code": 401,
+ *         "code": 400,
  *         "message": "UsernamePasswordMissing"
  *       }
  *     }
@@ -41,7 +41,7 @@ var auth = require('../lib/auth');
 router.post('/getToken', function(req, res, next) {
   if (!req.body.username || !req.body.password) {
     var err = new Error('UsernamePasswordMissing');
-    err.status = 401;
+    err.status = 400;
     next(err);
   }
   else

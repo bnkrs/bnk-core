@@ -24,7 +24,7 @@ module.exports = {
   },
 
   getUserByName: function mongoGetUserByName (username, callback) {
-    db.collection('users').findOne({ username: {$eq: username.toLowerCase().trim() } }, function (err, user) {
+    db.collection('users').findOne({ username: { $eq: username.toLowerCase().trim() } }, function (err, user) {
       if (err) callback(err);
       else callback(null, user);
     });

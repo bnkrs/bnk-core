@@ -5,9 +5,8 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   res.json({ 
-    app_name: pkg.name, 
-    app_v: pkg.version,
-    api_v: pkg.api_version
+    app: pkg.name, 
+    version: pkg.version,
   });
 });
 
