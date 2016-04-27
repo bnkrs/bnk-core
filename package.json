@@ -1,0 +1,44 @@
+{
+  "name": "bnk-core",
+  "version": "0.0.0",
+  "api_version": 0,
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www | ./node_modules/bunyan/bin/bunyan"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "~1.13.2",
+    "bunyan": "^1.8.1",
+    "content-filter": "^1.0.22",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "email-validator": "^1.0.4",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "jsonwebtoken": "^5.7.0",
+    "mongodb": "^2.1.16",
+    "morgan": "~1.6.1",
+    "random-words": "0.0.1",
+    "serve-favicon": "~2.3.0"
+  },
+  "description": "An open-source debit-system for small communities.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bnkrs/bnk-core.git"
+  },
+  "keywords": [
+    "debit",
+    "bnk"
+  ],
+  "author": "lschuermann",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bnkrs/bnk-core/issues"
+  },
+  "homepage": "https://github.com/bnkrs/bnk-core#readme",
+  "apidoc": {
+    "title": "bnk-core - API-Documentation",
+    "url": "https://your.bnk.instance"
+  }
+}
