@@ -114,7 +114,7 @@ var auth = require('../lib/auth');
  *       }
  *     }
  */
-router.post('/new', function(req, res, next) {
+router.post('/new', (req, res, next) => {
   var b = req.body;
   if (!b.username || !b.password || !b.recoveryMethod) {
     var err = new Error('FieldsMissing');
@@ -147,7 +147,7 @@ router.post('/new', function(req, res, next) {
  *       "email": "your.mail@provider.tld"
  *     }
  */
-router.get('/settings', auth.requireAuthenticated, function(req, res, next) {
+router.get('/settings', auth.requireAuthenticated, (req, res, next) => {
   user.getSettings(req.user, function(err, settings) {
     if (err) return next(err);
     res.json(settings);
@@ -187,12 +187,143 @@ router.get('/settings', auth.requireAuthenticated, function(req, res, next) {
  *       "errors": ["error_1", "error_2"]
  *     }
  */
-router.post('/settings', auth.requireAuthenticated, function(req, res, next) {
+router.post('/settings', auth.requireAuthenticated, (req, res, next) => {
   user.applySettings(req.user, req.body, function (err, success, phrase) {
     if (err) next(err);
     else if (!phrase) res.json({success: success});
-    else res.json({success: success, phrase: phrase})
+    else res.json({success: success, phrase: phrase});
   });
 })
+
+/**
+ * @api {get} /user/balance Get the users current balance
+ * @apiName Balance
+ * @apiGroup User
+ *
+ * @apiUse Login
+ *
+ * @apiSuccess {Number} balance The current user's settings in eurocents.
+ * @apiSuccessExample Success-Response
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "balance": 1299
+ *     }
+ */
+router.get('/balance', auth.requireAuthenticated, (req, res, next) => {
+  user.balance(req.user, (err, balance) => {
+    if (err) next(err);
+    else res.json({ balance: balance });
+  })
+});
+
+/**
+ * @api {get} /user/transactions Get the users transactions
+ * @apiName Transactions
+ * @apiGroup User
+ *
+ * @apiUse Login
+ *
+ * @apiSuccess {Array} transactions
+ * @apiSuccess {String} transactions[i].sender Sender username
+ * @apiSuccess {String} transactions[i].receiver Receiver username (if terminal-payment prefixed with "terminal_")
+ * @apiSuccess {Number} transactions[i].value The transaction value in eurocents
+ * @apiSuccess {Number} transcations[i].timestamp Transaction timestamp (Unix in ms)
+ *
+ * @apiSuccessExample Success-Response Transaction-Logging enabled
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "transactions": [
+ *         {
+ *           "sender": "alice",
+ *           "receiver": "steve",
+ *           "value": 275,
+ *           "timestamp": 881928732657
+ *         },
+ *         {
+ *           "sender": "jon",
+ *           "receiver": "terminal_mainhall",
+ *           "value": 170,
+ *           "timestamp": 1715369892847
+ *         }
+ *       ]
+ *     }
+ * @apiSuccessExample Success-Response Transaction-Logging disabled
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "transactions": []
+ *     }
+ */
+router.get('/transactions', auth.requireAuthenticated, (req, res, next) => {
+  user.transactions(req.user, (err, transactions) => {
+    if (err) next(err);
+    else res.json({ transactions: transactions });
+  })
+});
+
+/**
+ * @api {post} /user/send Perform a transaction
+ * @apiName SendMoney
+ * @apiGroup User
+ *
+ * @apiUse Login
+ *
+ * @apiParam {String} receiver The user to whom the money is sent
+ * @apiParam {Number} value The amount of money in eurocents
+ *
+ * @apiSuccess {Boolean} success Whether the transaction was successful
+ * @apiSuccess {Number} newBalance The balance after the transaction
+ *
+ * @apiSuccessExample Success-Response
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "success": true,
+ *       "newBalance": 4089 
+ *     }
+ *
+ * @apiError ReceiverNotFound The receiving user can't be found / Money is being sent to a terminal-account (not possible)
+ * @apiErrorExample ReceiverNotFound
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 400,
+ *         "message": "ReceiverNotFound"
+ *       }
+ *     }
+ *
+ * @apiError BalanceInsufficient The sender's account balance is insufficient to perform the transaction.
+ * @apiErrorExample BalanceInsufficient
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 400,
+ *         "message": "BalanceInsufficient"
+ *       }
+ *     }
+ *
+ * @apiError BadRequest Fields are missing or the <code>value</code> is not a positive integer
+ * @apiErrorExample BadRequest
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *        "error": {
+ *          "code": 400,
+ *          "message": "BadRequest"
+ *        }
+ *      }
+ */
+router.post("/send", auth.requireAuthenticated, (req, res, next) => {
+  user.sendMoney(req.user, req.body.receiver, req.body.value, (err) => {
+    if (err) next(err);
+    else
+      user.balance(user, (err, balance) => {
+        if (err) next(err);
+        else
+          res.json({
+            success: true,
+            newBalance: balance
+          })
+      });
+  })
+});
+
 
 module.exports = router;

@@ -20,6 +20,7 @@ module.exports = {
   },
 
   insertUser: function mongoInsertUser (user, callback) {
+    user.username = user.username.toLowerCase().trim();
     db.collection('users').insert(user, callback);
   },
 
