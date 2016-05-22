@@ -4,6 +4,9 @@ var router = express.Router();
 var user = require('../lib/user');
 var auth = require('../lib/auth');
 
+var generic = require('../lib/generic');
+var newError = generic.newError;
+
 /**
  * @apiDefine Login
  *
@@ -325,5 +328,62 @@ router.post("/send", auth.requireAuthenticated, (req, res, next) => {
   })
 });
 
+/**
+ * @api {post} /user/change_password Change the users password
+ * @apiName ChangePassword
+ * @apiGroup User
+ *
+ * @apiUse Login
+ *
+ * @apiParam {String} new_password The new password to set
+ * @apiParam {String} old_password The old user-password
+ *
+ * @apiSuccess {Boolean} success Whether the password-change was successful
+ *
+ * @apiSuccessExample Success-Response
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "success": true
+ *     }
+ *
+ * @apiError PasswordTooWeak New password doesn't meet expectations
+ * @apiErrorExample PasswordTooWeak
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 400,
+ *         "message": "PasswordTooWeak"
+ *       }
+ *     }
+ *
+ * @apiError PasswordWrong The old password is wrong
+ * @apiErrorExample PasswordWrong
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 401,
+ *         "message": "PasswordWrong"
+ *       }
+ *     }
+ *
+ * @apiError BadRequest Fields are missing
+ * @apiErrorExample BadRequest
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *        "error": {
+ *          "code": 400,
+ *          "message": "BadRequest"
+ *        }
+ *      }
+ */
+router.post('/change_password', auth.requireAuthenticated, (req, res, next) => {
+  if (!req.body.old_password || !req.body.new_password)
+    next(newError("BadRequest", 400));
+  else
+    user.changePassword(req.user, req.body.old_password, req.body.new_password, (err) => {
+      if (err) next(err);
+      else res.json({success: true});
+    });
+});
 
 module.exports = router;

@@ -45,16 +45,16 @@ router.post('/getToken', function(req, res, next) {
     next(err);
   }
   else
-    auth.checkPassword(req.body.username, req.body.password, function (err, valid, id) {
+    auth.checkPasswordByUsername(req.body.username, req.body.password, function (err, valid, user) {
       if (err) return next(err);
       // Redundant check, !id wouldn't be needed normally
-      else if (!valid || !id) {
+      else if (!valid || !user) {
         // Username or password wrong
         var err = new Error('UsernamePasswordWrong');
         err.status = 401;
         return next(err);
       } else
-        auth.issueJWT(id, "30 minutes", function (err, token) {
+        auth.issueJWT(user._id, "30 minutes", function (err, token) {
           if (err) return next(err);
           else
             res.json({token: token});

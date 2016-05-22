@@ -6,7 +6,7 @@ var path = require('path');
 var bunyan = require('bunyan');
 var bodyParser = require('body-parser');
 
-// Load everything generic to load
+// Load everything generic
 var generic = require('./lib/generic');
 
 // Prevent nosql-attacks
