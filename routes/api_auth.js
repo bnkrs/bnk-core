@@ -3,6 +3,8 @@ var router = express.Router();
 
 var auth = require('../lib/auth');
 
+var tokenExpireSec = 24 * 60 * 60;
+
 /**
  * @api {post} /auth/getToken Request an api-token
  * @apiName GetToken
@@ -12,10 +14,12 @@ var auth = require('../lib/auth');
  * @apiParam {String} password Password
  *
  * @apiSuccess {String} token The requested token.
+ * @apiSuccess {Number} validFor How long the token is valid (in ms)
  * @apiSuccessExample Success-Response
  *     HTTP/1.1 200 OK
  *     {
- *       "token": "ey [...] es0-1Qw"
+ *       "token": "ey [...] es0-1Qw",
+ *       "validFor": 86400000
  *     }
  * 
  * @apiError UsernamePasswordMissing Either username or password wasn't provided
@@ -54,10 +58,13 @@ router.post('/getToken', function(req, res, next) {
         err.status = 401;
         return next(err);
       } else
-        auth.issueJWT(user._id, "30 minutes", function (err, token) {
+        auth.issueJWT(user._id, tokenExpireSec, function (err, token) {
           if (err) return next(err);
           else
-            res.json({token: token});
+            res.json({
+              token: token,
+              validFor: tokenExpireSec * 1000
+            });
         })
     });
 });
