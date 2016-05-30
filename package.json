@@ -22,7 +22,8 @@
     "morgan": "~1.6.1",
     "nodemailer": "^2.4.2",
     "random-words": "0.0.1",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "zxcvbn": "^4.3.0"
   },
   "description": "An open-source debit-system for small communities.",
   "repository": {
