@@ -1,7 +1,17 @@
 sudo: false
 language: node_js
 node_js:
-  - "5"
+  - '5'
+env:
+  - BUILD_TYPE="TEST"
+  - BUILD_TYPE="APIDOC"
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_8939cbed2c9c_key -iv $encrypted_8939cbed2c9c_iv -in travis-apidoc/apidoc_sshkey.enc -out travis-apidoc/apidoc_sshkey -d
+  - mkdir -p ~/.ssh
+  - cp travis-apidoc/apidoc_sshkey ~/.ssh/id_rsa
+  - cp travis-apidoc/apidoc_sshkey.pub ~/.ssh/id_rsa.pub
+  - chmod 600 ~/.ssh/id_rsa
 
 install:
   - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-3.2.4.tgz -O /tmp/mongodb.tgz
@@ -9,18 +19,20 @@ install:
   - mkdir /tmp/data
   - ${PWD}/mongodb-linux-x86_64-3.2.4/bin/mongod --dbpath /tmp/data --bind_ip 127.0.0.1 &> /dev/null &
   - until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done
-
-  - npm install -g jasmine-node forever > ./npmlog 2>> ./npmlog && echo "=> npm-deps installed successfully\!" || (echo "There was an error while installing the npm-dependencies:$(cat ./npmlog)"; exit 1)
+  - npm install -g jasmine-node forever apidoc > ./npmlog 2>> ./npmlog && echo "=> npm-deps installed successfully\!" || (echo "There was an error while installing the npm-dependencies:$(cat ./npmlog)"; exit 1)
   - npm install --dev
 
 before_script:
-  - echo Configuring...; cp ./test/lib/config.travis.js ./config.js
-  - export NODE_ENV=development
-  - forever start ./bin/www
-  - until nc -z localhost 3000; do echo Waiting for bnk-core; sleep 1; done; sleep 2
+  - git config --global user.email "bnk-apidoc@lschuermann.xyz"
+  - git config --global user.name "bnk-apidoc"
+  - if [ "$BUILD_TYPE" == "TEST" ]; then echo Configuring...; cp ./test/lib/config.travis.js ./config.js; fi
+  - if [ "$BUILD_TYPE" == "TEST" ]; then export NODE_ENV=development; fi
+  - if [ "$BUILD_TYPE" == "TEST" ]; then forever start ./bin/www; fi
+  - if [ "$BUILD_TYPE" == "TEST" ]; then until nc -z localhost 3000; do echo Waiting for bnk-core; sleep 1; done; sleep 2; fi
 
 script:
-  - mocha
+  - if [ "$BUILD_TYPE" == "TEST" ]; then mocha; fi
+  - if [ "$BUILD_TYPE" == "APIDOC" ]; then cd travis-apidoc; sh generate-apidoc.sh; fi
 
 after_script:
-  - forever logs 0 | ./node_modules/bunyan/bin/bunyan
+  - if [ "$BUILD_TYPE" == "TEST" ]; then forever logs 0 | ./node_modules/bunyan/bin/bunyan; fi
