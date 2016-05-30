@@ -14,10 +14,10 @@ var newError = generic.newError;
  *
  * @apiError NoTokenProvided No token was given (via <code>Query</code> / <code>Body</code>)
  * @apiErrorExample NoTokenProvided
- *     HTTP/1.1 401 Not Authorized
+ *     HTTP/1.1 400 Bad Request
  *     {
  *       "error": {
- *         "code": 401,
+ *         "code": 400,
  *         "message": "NoTokenProvided"
  *       }
  *     }
@@ -165,7 +165,7 @@ router.get('/settings', auth.requireAuthenticated, (req, res, next) => {
  * @apiUse Login
  *
  * @apiParam {Boolean} transactionLogging Whether transaction-data should be logged.
- * @apiParam {String} recoveryMethod 
+ * @apiParam {String} recoveryMethod
  *
  * @apiSuccess {Boolean} success If the settings were saved successfully.
  * @apiSuccess {String} [phrase] If the recovery-method was changed to <code>phrase</code>, provide the user with a new recovery phrase.
@@ -280,7 +280,7 @@ router.get('/transactions', auth.requireAuthenticated, (req, res, next) => {
  *     HTTP/1.1 200 OK
  *     {
  *       "success": true,
- *       "newBalance": 4089 
+ *       "newBalance": 4089
  *     }
  *
  * @apiError ReceiverNotFound The receiving user can't be found / Money is being sent to a terminal-account (not possible)

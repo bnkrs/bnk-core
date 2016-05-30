@@ -17,7 +17,7 @@ var content_filter = require('content-filter');
 var log = bunyan.createLogger({name: pkg.name});
 
 var db = require('./db/' + config.db);
-db.connect(config[config.db].url, function(err) {
+db.connect(config[config.db], function(err) {
   if (err) {
     log.error("Error while connecting to the database.", err);
     process.exit(1);
@@ -37,6 +37,8 @@ var api_auth = require('./routes/api_auth');
 app.use('/auth', api_auth);
 var api_user = require('./routes/api_user');
 app.use('/user', api_user);
+var api_admin = require('./routes/api_admin');
+app.use('/admin', api_admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
