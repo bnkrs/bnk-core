@@ -1,3 +1,5 @@
+'use strict';
+
 var pkg = require('./package.json');
 var config = require('./config')
 
@@ -19,7 +21,7 @@ db.connect(config[config.db].url, function(err) {
   if (err) {
     log.error("Error while connecting to the database.", err);
     process.exit(1);
-  } else 
+  } else
     log.info("Connection to database established successfully.");
 });
 
@@ -48,9 +50,10 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
+  log.warn(pkg.name, "running in development-mode, therefore providing stack traces to the client!");
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.json({ 
+    res.json({
       error: {
         code: err.status || 500,
         message: err.message,
@@ -64,7 +67,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-    res.json({ 
+    res.json({
       error: {
         code: err.status || 500,
         message: err.message

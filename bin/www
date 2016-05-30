@@ -11,6 +11,12 @@ var debug = require('debug')('bnk:server');
 var http = require('http');
 
 /**
+ * Default to production environment
+ */
+if (process.env.NODE_ENV != "development")
+  process.env.NODE_ENV = "production";
+
+/**
  * Get port from environment and store in Express.
  */
 

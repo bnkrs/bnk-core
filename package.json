@@ -4,7 +4,8 @@
   "api_version": 0,
   "private": true,
   "scripts": {
-    "start": "node ./bin/www | ./node_modules/bunyan/bin/bunyan"
+    "start": "node ./bin/www | ./node_modules/bunyan/bin/bunyan",
+    "dev": "NODE_ENV=development node ./bin/www | ./node_modules/bunyan/bin/bunyan"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -19,6 +20,7 @@
     "jsonwebtoken": "^5.7.0",
     "mongodb": "^2.1.16",
     "morgan": "~1.6.1",
+    "nodemailer": "^2.4.2",
     "random-words": "0.0.1",
     "serve-favicon": "~2.3.0"
   },
