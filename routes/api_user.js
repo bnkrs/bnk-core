@@ -116,14 +116,22 @@ var newError = generic.newError;
  *         "message": "EmailMissingInvalid"
  *       }
  *     }
+ *
+ * @apiError UsernameInvalid Username contains illegal characters (eg. underscores, spaces)
+ * @apiErrorExample UsernameInvalid
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "error": {
+ *         "code": 400,
+ *         "message": "UsernameInvalid"
+ *       }
+ *     }
  */
 router.post('/new', (req, res, next) => {
   var b = req.body;
-  if (!b.username || !b.password || !b.recoveryMethod) {
-    var err = new Error('FieldsMissing');
-    err.status = 400;
-    next(err);
-  } else
+  if (!b.username || !b.password || !b.recoveryMethod)
+    next(newError("FieldsMissing", 400));
+  else
     user.new(b.username, b.password, b.recoveryMethod, b.email, function (err, success, phrase) {
       if (err) next(err);
       else if (!phrase) res.json({success: success});

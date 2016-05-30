@@ -100,3 +100,5 @@ router.post('/addMoney', auth.requireAdmin, (req, res, next) => {
       else req.json({ success: true });
     })
 });
+
+module.exports = router;
