@@ -3,9 +3,19 @@ var MongoClient = mongo.MongoClient;
 
 var db = null;
 
+/**
+ * This is a very, very, very dangerous function and may lead to catastrophic
+ * data loss. Therefore, only define it if in development-mode.
+ */
+var mongoDropUsers = undefined;
+if (process.env.NODE_ENV === "development")
+  mongoDropUsers = function mongoDropUsers (callback) {
+    db.collection('users').drop(callback);
+  };
+
 module.exports = {
-  connect: function mongoConnect (url, callback) {
-    MongoClient.connect(url, function(err, pdb) {
+  connect: function mongoConnect (cfg, callback) {
+    MongoClient.connect(cfg.url, function(err, pdb) {
       if (err)
         callback(err);
       else {
@@ -50,6 +60,7 @@ module.exports = {
       if (err) callback(err);
       else callback(null);
     });
-  }
-};
+  },
 
+  dropUsers: mongoDropUsers
+};

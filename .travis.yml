@@ -14,12 +14,13 @@ install:
   - npm install --dev
 
 before_script:
-  - echo Configuring...; cp ./test/config.travis.js ./config.js
+  - echo Configuring...; cp ./test/lib/config.travis.js ./config.js
+  - export NODE_ENV=development
   - forever start ./bin/www
   - until nc -z localhost 3000; do echo Waiting for bnk-core; sleep 1; done; sleep 2
 
 script:
-  - echo "Testing currently disabled."
+  - mocha
 
 after_script:
-  - forever logs 0
+  - forever logs 0 | ./node_modules/bunyan/bin/bunyan

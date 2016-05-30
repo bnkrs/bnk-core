@@ -45,10 +45,11 @@
     "url": "https://your.bnk.instance"
   },
   "devDependencies": {
+    "assert": "^1.4.0",
     "frisby": "^0.8.5",
     "jasmine-node": "^1.14.5",
-    "mocha": "^2.4.5",
-    "should": "^8.3.1",
+    "mocha": "^2.5.3",
+    "should": "^8.4.0",
     "supertest": "^1.2.0"
   }
 }
