@@ -129,14 +129,19 @@ var newError = generic.newError;
  */
 router.post('/new', (req, res, next) => {
   var b = req.body;
-  if (!b.username || !b.password || !b.recoveryMethod)
+  if (!b.username || !b.password || !b.recoveryMethod) {
     next(newError("FieldsMissing", 400));
-  else
+  } else {
     user.new(b.username, b.password, b.recoveryMethod, b.email, function (err, success, phrase) {
-      if (err) next(err);
-      else if (!phrase) res.json({success: success});
-      else res.json({success: success, phrase: phrase })
+      if (err) {
+        next(err);
+      } else if (!phrase) {
+        res.json({success: success});
+      } else {
+        res.json({success: success, phrase: phrase });
+      }
     });
+  }
 });
 
 /**
@@ -160,8 +165,11 @@ router.post('/new', (req, res, next) => {
  */
 router.get('/settings', auth.requireAuthenticated, (req, res, next) => {
   user.getSettings(req.user, function(err, settings) {
-    if (err) return next(err);
-    res.json(settings);
+    if (err) {
+      return next(err);
+    } else {
+      res.json(settings);
+    }
   });
 });
 
@@ -200,11 +208,15 @@ router.get('/settings', auth.requireAuthenticated, (req, res, next) => {
  */
 router.post('/settings', auth.requireAuthenticated, (req, res, next) => {
   user.applySettings(req.user, req.body, function (err, success, phrase) {
-    if (err) next(err);
-    else if (!phrase) res.json({success: success});
-    else res.json({success: success, phrase: phrase});
+    if (err) {
+      next(err);
+    } else if (!phrase) {
+      res.json({success: success});
+    } else {
+      res.json({success: success, phrase: phrase});
+    }
   });
-})
+});
 
 /**
  * @api {get} /user/balance Get the users current balance
@@ -222,9 +234,12 @@ router.post('/settings', auth.requireAuthenticated, (req, res, next) => {
  */
 router.get('/balance', auth.requireAuthenticated, (req, res, next) => {
   user.balance(req.user, (err, balance) => {
-    if (err) next(err);
-    else res.json({ balance: balance });
-  })
+    if (err) {
+      next(err);
+    } else {
+      res.json({ balance: balance });
+    }
+  });
 });
 
 /**
@@ -266,9 +281,12 @@ router.get('/balance', auth.requireAuthenticated, (req, res, next) => {
  */
 router.get('/transactions', auth.requireAuthenticated, (req, res, next) => {
   user.transactions(req.user, (err, transactions) => {
-    if (err) next(err);
-    else res.json({ transactions: transactions });
-  })
+    if (err) {
+      next(err);
+    } else {
+      res.json({ transactions: transactions });
+    }
+  });
 });
 
 /**
@@ -323,17 +341,21 @@ router.get('/transactions', auth.requireAuthenticated, (req, res, next) => {
  */
 router.post("/send", auth.requireAuthenticated, (req, res, next) => {
   user.sendMoney(req.user, req.body.receiver, req.body.value, (err) => {
-    if (err) next(err);
-    else
+    if (err) {
+      next(err);
+    } else {
       user.balance(user, (err, balance) => {
-        if (err) next(err);
-        else
+        if (err) {
+          next(err);
+        } else {
           res.json({
             success: true,
             newBalance: balance
-          })
+          });
+        }
       });
-  })
+    }
+  });
 });
 
 /**
@@ -385,13 +407,17 @@ router.post("/send", auth.requireAuthenticated, (req, res, next) => {
  *      }
  */
 router.post('/change_password', auth.requireAuthenticated, (req, res, next) => {
-  if (!req.body.old_password || !req.body.new_password)
+  if (!req.body.old_password || !req.body.new_password) {
     next(newError("BadRequest", 400));
-  else
+  } else {
     user.changePassword(req.user, req.body.old_password, req.body.new_password, (err) => {
-      if (err) next(err);
-      else res.json({success: true});
+      if (err) {
+        next(err);
+      } else {
+        res.json({success: true});
+      }
     });
+  }
 });
 
 module.exports = router;

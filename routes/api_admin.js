@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var auth = require('../lib/auth');
-var admin = require('../lib/admin')
+var admin = require('../lib/admin');
 
 var generic = require('../lib/generic');
 var newError = generic.newError;
@@ -92,13 +92,17 @@ var newError = generic.newError;
   *      }
   */
 router.post('/addMoney', auth.requireAdmin, (req, res, next) => {
-  if (!req.body.receiver|| !req.body.value)
+  if (!req.body.receiver || !req.body.value) {
     next(newError("BadRequest", 400));
-  else
+  } else {
     admin.addMoney(req.user.username, req.body.receiver, req.body.value, (err) => {
-      if (err) next(err);
-      else req.json({ success: true });
-    })
+      if (err) {
+        next(err);
+      } else {
+        req.json({ success: true });
+      }
+    });
+  }
 });
 
 module.exports = router;

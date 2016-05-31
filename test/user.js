@@ -27,14 +27,15 @@ describe('user-account test', function() {
       }
 
       db.clearUsers((err) =>{
-        if (err && err.message == 'ns not found')
+        if (err && err.message === 'ns not found') {
           // Collection doesn't even exist, no need for it to be cleared
           console.log("User-collection was not cleared, as it doesn't exist. This is not an error!");
-        else if (err) {
+        } else if (err) {
           console.error("Could not clear the users-collection.", err);
           process.exit(1);
+        } else {
+          console.log("User-collection was successfully cleared.");
         }
-        else console.log("User-collection was successfully cleared.")
 
         done();
       });
@@ -331,7 +332,7 @@ describe('user-account test', function() {
   });
 
   describe('account settings', () => {
-    it('should be able to switch from email to phrase-based recovery', (done) => {
+    it('should be able to switch from email- to phrase-based recovery', (done) => {
       var req_body = {
         token: emailUser_token,
         recoveryMethod: "phrase"
@@ -363,6 +364,105 @@ describe('user-account test', function() {
               });
         });
     });
-  })
+
+    it('should be able to switch from phrase- to email-based recovery', (done) => {
+      var req_body = {
+        token: phraseUser_token,
+        recoveryMethod: "email",
+        email: email
+      };
+
+      request(url)
+	      .post('/user/settings')
+	      .send(req_body)
+	      .end(function(err, res) {
+          if (err) {
+            throw err;
+          }
+
+          res.status.should.be.equal(200);
+          res.body.success.should.be.equal(true);
+          res.body.should.not.have.property("phrase");
+
+
+            request(url)
+              .get('/user/settings')
+              .send({token: phraseUser_token})
+              .end(function(err, res) {
+
+                res.status.should.be.equal(200);
+                res.body.recoveryMethod.should.be.equal("email");
+
+                done();
+
+              });
+        });
+    });
+
+    it('should be able to switch transaction-logging on', (done) => {
+      var req_body = {
+        token: phraseUser_token,
+        transactionLogging: true
+      };
+
+      request(url)
+	      .post('/user/settings')
+	      .send(req_body)
+	      .end(function(err, res) {
+          if (err) {
+            throw err;
+          }
+
+          res.status.should.be.equal(200);
+          res.body.success.should.be.equal(true);
+
+
+            request(url)
+              .get('/user/settings')
+              .send({token: phraseUser_token})
+              .end(function(err, res) {
+
+                res.status.should.be.equal(200);
+                res.body.transactionLogging.should.be.equal(true);
+
+                done();
+
+              });
+        });
+    });
+
+    it('should be able to switch transaction-logging on', (done) => {
+      var req_body = {
+        token: phraseUser_token,
+        transactionLogging: false
+      };
+
+      request(url)
+	      .post('/user/settings')
+	      .send(req_body)
+	      .end(function(err, res) {
+          if (err) {
+            throw err;
+          }
+
+          res.status.should.be.equal(200);
+          res.body.success.should.be.equal(true);
+
+
+            request(url)
+              .get('/user/settings')
+              .send({token: phraseUser_token})
+              .end(function(err, res) {
+
+                res.status.should.be.equal(200);
+                res.body.transactionLogging.should.be.equal(false);
+
+                done();
+
+              });
+        });
+    });
+
+  });
 
 });

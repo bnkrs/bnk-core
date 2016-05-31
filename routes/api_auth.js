@@ -21,7 +21,7 @@ var tokenExpireSec = 24 * 60 * 60;
  *       "token": "ey [...] es0-1Qw",
  *       "validFor": 86400000
  *     }
- * 
+ *
  * @apiError UsernamePasswordMissing Either username or password wasn't provided
  * @apiErrorExample UsernamePasswordMissing
  *     HTTP/1.1 400 Bad Request
@@ -47,26 +47,29 @@ router.post('/getToken', function(req, res, next) {
     var err = new Error('UsernamePasswordMissing');
     err.status = 400;
     next(err);
-  }
-  else
-    auth.checkPasswordByUsername(req.body.username, req.body.password, function (err, valid, user) {
-      if (err) return next(err);
-      // Redundant check, !id wouldn't be needed normally
-      else if (!valid || !user) {
+  } else {
+    auth.checkPasswordByUsername(req.body.username, req.body.password, (err, valid, user) => {
+      if (err) {
+        return next(err);
+      } else if (!valid || !user) {
         // Username or password wrong
         var err = new Error('UsernamePasswordWrong');
         err.status = 401;
         return next(err);
-      } else
+      } else {
         auth.issueJWT(user._id, tokenExpireSec, function (err, token) {
-          if (err) return next(err);
-          else
+          if (err) {
+            return next(err);
+          } else {
             res.json({
               token: token,
               validFor: tokenExpireSec * 1000
             });
-        })
+          }
+        });
+      }
     });
+  }
 });
 
 module.exports = router;
