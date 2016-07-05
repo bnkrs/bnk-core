@@ -3,7 +3,7 @@ var router = express.Router();
 
 var auth = require('../lib/auth');
 
-var tokenExpireSec = 24 * 60 * 60;
+var tokenExpireSec = 30 * 60;
 
 /**
  * @api {post} /auth/getToken Request an api-token
