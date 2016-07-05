@@ -14,7 +14,7 @@
     "brace-style": [2, "1tbs", { "allowSingleLine": true }],
     "comma-dangle": [2, "never"],
     "comma-style": [2, "first", { "exceptions": {"ArrayExpression": true, "ObjectExpression": true} }],
-    "complexity": [2, 12],
+    "complexity": [2, 13],
     "curly": ["error", "all"],
     "eqeqeq": [2, "allow-null"],
     "max-statements": [2, 30],
