@@ -278,6 +278,69 @@ describe('user-account test', function() {
 
   describe('login', () => {
 
+    it('should not login without credentials', (done) => {
+       var auth = { };
+
+       request(url)
+         .post('/auth/getToken')
+         .send(auth)
+         .end((err, res) => {
+           if (err) {
+             throw (err);
+           }
+
+           res.status.should.be.equal(400);
+           res.body.should.have.property('error');
+           res.body.error.message.should.be.equal("UsernamePasswordMissing");
+
+           done();
+         });
+    });
+
+    it('should not login with a wrong username', (done) => {
+       var auth = {
+         username: "blablubb",
+         password: password
+       };
+
+       request(url)
+         .post('/auth/getToken')
+         .send(auth)
+         .end((err, res) => {
+           if (err) {
+             throw (err);
+           }
+
+           res.status.should.be.equal(401);
+           res.body.should.have.property('error');
+           res.body.error.message.should.be.equal("UsernamePasswordWrong");
+
+           done();
+         });
+    });
+
+    it('should not login with a wrong password', (done) => {
+       var auth = {
+         username: email_username,
+         password: "foo_bar"
+       };
+
+       request(url)
+         .post('/auth/getToken')
+         .send(auth)
+         .end((err, res) => {
+           if (err) {
+             throw (err);
+           }
+
+           res.status.should.be.equal(401);
+           res.body.should.have.property('error');
+           res.body.error.message.should.be.equal("UsernamePasswordWrong");
+
+           done();
+         });
+    });
+
     it('should login in to the email-recovery user', (done) => {
       var auth = {
         username: email_username,
@@ -299,12 +362,13 @@ describe('user-account test', function() {
 
         // Save the token
         emailUser_token = res.body.token;
+        //console.log("Email-recovery login token:", emailUser_token);
 
         done();
       });
     });
 
-    it('should login in to the email-recovery user', (done) => {
+    it('should login in to the phrase-recovery user', (done) => {
       var auth = {
         username: phrase_username,
         password: password
@@ -325,7 +389,7 @@ describe('user-account test', function() {
 
           // Save the token
           phraseUser_token = res.body.token;
-
+          //console.log("Phrase-recovery login token:", phraseUser_token);
           done();
         });
     });
@@ -412,7 +476,7 @@ describe('user-account test', function() {
           if (err) {
             throw err;
           }
-
+          //console.log(res.body);
           res.status.should.be.equal(200);
           res.body.success.should.be.equal(true);
 
@@ -431,7 +495,7 @@ describe('user-account test', function() {
         });
     });
 
-    it('should be able to switch transaction-logging on', (done) => {
+    it('should be able to switch transaction-logging off', (done) => {
       var req_body = {
         token: phraseUser_token,
         transactionLogging: false
