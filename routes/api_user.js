@@ -182,6 +182,7 @@ router.get('/settings', auth.requireAuthenticated, (req, res, next) => {
  *
  * @apiParam {Boolean} transactionLogging Whether transaction-data should be logged.
  * @apiParam {String} recoveryMethod
+ * @apiParam {String} [email] To change the e-mail (nescessary for recovery method "email")
  *
  * @apiSuccess {Boolean} success If the settings were saved successfully.
  * @apiSuccess {String} [phrase] If the recovery-method was changed to <code>phrase</code>, provide the user with a new recovery phrase.
