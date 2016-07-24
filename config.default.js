@@ -9,6 +9,6 @@ module.exports = {
   // Secret phrase or private key contents for jwt
   jwtSec: "helloworld",
 
-  pwdStrengthMin: 10
+  zxcvbn_minScore: 4
 
 }

@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
     app: pkg.name,
     version: pkg.version,
     config: {
-      zxcvbn_minscore: cfg.zxcvbn_minscore
+      zxcvbn_minScore: cfg.zxcvbn_minScore
     }
   });
 });
