@@ -1,7 +1,7 @@
 'use strict';
 
 var pkg = require('./package.json');
-var config = require('./config')
+var config = require('./config');
 
 var express = require('express');
 var path = require('path');
@@ -21,8 +21,9 @@ db.connect(config[config.db], function(err) {
   if (err) {
     log.error("Error while connecting to the database.", err);
     process.exit(1);
-  } else
+  } else {
     log.info("Connection to database established successfully.");
+  }
 });
 
 var app = express();
@@ -61,7 +62,7 @@ if (app.get('env') === 'development') {
         message: err.message,
         stack: err.stack
       }
-    })
+    });
   });
 }
 
@@ -74,7 +75,7 @@ app.use(function(err, req, res, next) {
         code: err.status || 500,
         message: err.message
       }
-    })
+    });
 });
 
 

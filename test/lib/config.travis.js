@@ -12,4 +12,4 @@ module.exports = {
   // 3 should be a good value here
   zxcvbn_minScore: 4
 
-}
+};

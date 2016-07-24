@@ -11,4 +11,4 @@ module.exports = {
 
   zxcvbn_minScore: 4
 
-}
+};
