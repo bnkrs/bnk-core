@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var auth = require('../lib/auth');
+var user = require('../lib/user');
 
 var tokenExpireSec = 30 * 60;
 
@@ -42,7 +43,7 @@ var tokenExpireSec = 30 * 60;
  *       }
  *     }
  */
-router.post('/getToken', function(req, res, next) {
+router.post('/getToken', (req, res, next) => {
   if (!req.body.username || !req.body.password) {
     var err = new Error('UsernamePasswordMissing');
     err.status = 400;
@@ -57,7 +58,7 @@ router.post('/getToken', function(req, res, next) {
         err.status = 401;
         return next(err);
       } else {
-        auth.issueJWT(user._id, tokenExpireSec, function (err, token) {
+        auth.issueJWT(user, tokenExpireSec, function (err, token) {
           if (err) {
             return next(err);
           } else {
@@ -70,6 +71,18 @@ router.post('/getToken', function(req, res, next) {
       }
     });
   }
+});
+
+router.post('/revokeTokens', auth.requireAuthenticated, (req, res, next) => {
+  user.updateRevocationString(req.user, (err) => {
+    if (err) {
+      return next(err);
+    } else {
+      res.json({
+        success: true
+      });
+    }
+  });
 });
 
 module.exports = router;
