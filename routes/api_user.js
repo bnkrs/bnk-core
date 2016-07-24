@@ -345,7 +345,7 @@ router.post("/send", auth.requireAuthenticated, (req, res, next) => {
     if (err) {
       next(err);
     } else {
-      user.balance(user, (err, balance) => {
+      user.balance(req.user, (err, balance) => {
         if (err) {
           next(err);
         } else {
