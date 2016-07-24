@@ -73,7 +73,22 @@ router.post('/getToken', (req, res, next) => {
   }
 });
 
-router.post('/revokeTokens', auth.requireAuthenticated, (req, res, next) => {
+/**
+ * @api {post} /auth/revoke_tokens Revoke all Tokens
+ * @apiName RevokeTokens
+ * @apiGroup Auth
+ *
+ * @apiUse Login
+ *
+ * @apiSuccess {Boolean} success Whether the revocation of all issued was successfull
+ *
+ * @apiSuccessExample Success-Response
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "success": true
+ *     }
+ */
+router.post('/revoke_tokens', auth.requireAuthenticated, (req, res, next) => {
   user.updateRevocationString(req.user, (err) => {
     if (err) {
       return next(err);
