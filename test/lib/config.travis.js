@@ -10,6 +10,6 @@ module.exports = {
   jwtSec: "helloworld",
 
   // 3 should be a good value here
-  zxcvbn_minscore: 3
+  zxcvbn_minScore: 4
 
 }
