@@ -1,4 +1,3 @@
-# bnk-core
-Dev: [![Build Status](https://travis-ci.org/bnkrs/bnk-core.svg?branch=develop)](https://travis-ci.org/bnkrs/bnk-core)
+# bnk-core [![License](https://img.shields.io/github/license/bnkrs/bnk-core.svg?style=flat-square)](https://github.com/bnkrs/bnk-core/blob/master/LICENSE) [![TravisCI](https://img.shields.io/travis/bnkrs/bnk-core/master.svg?style=flat-square)](https://travis-ci.org/bnkrs/bnk-core) [![Code Climate](https://img.shields.io/codeclimate/coverage/github/bnkrs/bnk-core.svg?style=flat-square)](https://codeclimate.com/github/bnkrs/bnk-core) [![DependencyCI](https://dependencyci.com/github/bnkrs/bnk-core/badge?style=flat-square)](https://dependencyci.com/github/bnkrs/bnk-core)
 
 The API-Backend to the bnk-ecosystem. Currently in development and not finished in any way.
