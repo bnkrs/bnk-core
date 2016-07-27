@@ -8,7 +8,7 @@
     "dev": "NODE_ENV=development node ./bin/www | ./node_modules/bunyan/bin/bunyan"
   },
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcrypt": "^0.8.7",
     "body-parser": "~1.13.2",
     "bunyan": "^1.8.1",
     "content-filter": "^1.0.22",
