@@ -15,7 +15,7 @@
     "comma-dangle": [2, "never"],
     "comma-style": [2, "first", { "exceptions": {"ArrayExpression": true, "ObjectExpression": true} }],
     "complexity": [2, 13],
-    "curly": ["error", "all"],
+    "curly": [2, "all"],
     "eqeqeq": [2, "allow-null"],
     "max-statements": [2, 30],
     "no-shadow-restricted-names": 2,
