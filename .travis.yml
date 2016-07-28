@@ -4,16 +4,19 @@ node_js:
   - '6'
 
 env:
+  - CXX=g++-4.8
   - BUILD_TYPE="TEST"
   - BUILD_TYPE="APIDOC"
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-    - g++-5
+      - gcc-4.8
+      - g++-4.8
 
 before_install:
-  - export CXX=g++-4.8
   - openssl aes-256-cbc -K $encrypted_8939cbed2c9c_key -iv $encrypted_8939cbed2c9c_iv -in travis-apidoc/apidoc_sshkey.enc -out travis-apidoc/apidoc_sshkey -d
   - mkdir -p ~/.ssh
   - cp travis-apidoc/apidoc_sshkey ~/.ssh/id_rsa
